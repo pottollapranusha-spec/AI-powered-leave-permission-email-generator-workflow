@@ -1,0 +1,189 @@
+{
+  "name": "GMAIL workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "vinushapottolla@gmail.com",
+        "subject": "exam permission",
+        "message": "={{ $('Message a model').first().json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        0
+      ],
+      "id": "9ce578ff-b24e-4405-b549-6a31f84fd334",
+      "name": "Send a message",
+      "webhookId": "9788995a-c100-4ecb-b141-18dabbd7c685",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CQ51RLGBodAtbQY8",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Employee Name: {{ $('On form submission').first().json.name }}\n- Manager Name: {{ $('On form submission').first().json.manager_name }}\n- Leave Type: {{ $('On form submission').first().json.leave_type }}\n- From: {{ $('On form submission').first().json.start_date }}\n- To: {{ $('On form submission').first().json.end_date }}\n- Reason: {{ $('On form submission').first().json.reason }}"
+            },
+            {
+              "role": "model"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6604a657-bb41-4e5b-8ee2-ef8656f67758",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lMxbh56d54RSDMrk",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "name"
+            },
+            {
+              "fieldLabel": "manager_name"
+            },
+            {
+              "fieldLabel": "leave_type",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "sick"
+                  },
+                  {
+                    "option": "casual"
+                  },
+                  {
+                    "option": "vacation"
+                  },
+                  {
+                    "option": "exam"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "start_date",
+              "fieldType": "date"
+            },
+            {
+              "fieldLabel": "end_date",
+              "fieldType": "date"
+            },
+            {
+              "fieldLabel": "reason",
+              "fieldType": "textarea"
+            },
+            {
+              "fieldLabel": "recipent_email",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4f768c95-abc0-4652-b6be-0f1aeb165bd8",
+      "name": "On form submission",
+      "webhookId": "2b47d0e9-bf2a-43a9-8ae3-f6bb66a082c8"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        144
+      ],
+      "id": "a6dc42aa-9949-4112-8a0b-784890e71135",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "ded030ea-5d51-45c9-ba9c-2ceba7e403a8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "11bec6ef45118ed85a4aa6e6fd9baa2c797420910c617a4842cd666c89854f21"
+  },
+  "id": "MSoHRAsZnCyxPhJq",
+  "tags": []
+}
