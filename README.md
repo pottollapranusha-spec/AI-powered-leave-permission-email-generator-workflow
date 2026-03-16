@@ -29,11 +29,3 @@ Anyone can use your workflow by:
 2. Opening n8n → **"Import from file"**
 3. Adding their own credentials
 
----
-
-## Folder Structure on GitHub
-```
-ai-leave-permission-email-workflow/
-├── workflow.json       ← n8n exported workflow
-├── README.md           ← project description
-└── screenshots/        ← optional: add workflow screenshots
